@@ -15,7 +15,7 @@ class User extends CI_Controller {
 
 	public function index()
 	{
-		$data['title'] = 'User';
+		$data['title'] = 'Admin | User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['user_list'] = $this->User_model->getAllUser();
 
@@ -24,7 +24,7 @@ class User extends CI_Controller {
 
 	public function create()
 	{
-		$data['title'] = 'User';
+		$data['title'] = 'Admin | User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 
 		$this->form_validation->set_rules('nama', 'Nama', 'trim|required');
@@ -39,7 +39,7 @@ class User extends CI_Controller {
 		if ($this->form_validation->run() == false) {						
 			$this->load->view('admin/user/add', $data);
 		} else {
-			$upload_image = $_FILES['foto'];
+			$upload_image = $_FILES['foto']['name'];
 			if ($upload_image) {
 				$config['upload_path'] = './assets/img/profile/';
 				$config['allowed_types'] = 'gif|jpg|png';
@@ -77,20 +77,31 @@ class User extends CI_Controller {
 
 	}
 
+	public function username_check()
+    {
+    	$query = $this->db->select('id_user','username')->where('username', $this->input->post('username', true))->where_not_in('id_user', $this->input->post('id_user', true))->count_all_results('user');
+        if ($query > 0){
+            $this->form_validation->set_message('username_check', '{field} Tidak tersedia');
+            return FALSE;
+        }else{
+            return TRUE;
+        }
+    }
+
 	public function update($id)
 	{
-		$data['title'] = 'User';
+		$data['title'] = 'Admin | User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['user_data'] = $this->User_model->getUser($id);						
 
 		$this->form_validation->set_rules('nama', 'Nama', 'trim|required');
-		$this->form_validation->set_rules('username', 'Username', 'required');
+		$this->form_validation->set_rules('username', 'Username', 'required|callback_username_check');
 		$this->form_validation->set_rules('role', 'Role', 'required|trim');
 
 		if ($this->form_validation->run() == false) {
 			$this->load->view('admin/user/edit', $data);
 		} else {
-			$upload_image = $_FILES['foto'];
+			$upload_image = $_FILES['foto']['name'];
 			if ($upload_image) {
 				$config['upload_path'] = './assets/img/profile/';
 				$config['allowed_types'] = 'gif|jpg|png';

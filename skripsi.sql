@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 27 Bulan Mei 2020 pada 21.38
+-- Waktu pembuatan: 31 Bulan Mei 2020 pada 00.57
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 5.6.40
 
@@ -39,7 +39,8 @@ CREATE TABLE `kriteria` (
 
 INSERT INTO `kriteria` (`id_kriteria`, `nama_kriteria`) VALUES
 (2, 'fasilitas'),
-(3, 'biaya');
+(3, 'biaya'),
+(4, 'akreditasi');
 
 -- --------------------------------------------------------
 
@@ -56,6 +57,13 @@ CREATE TABLE `sekolah` (
   `latitude` float NOT NULL,
   `longtitude` float NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `sekolah`
+--
+
+INSERT INTO `sekolah` (`id_sekolah`, `nama_sekolah`, `nama_kepala_sekolah`, `alamat_sekolah`, `no_telepon`, `latitude`, `longtitude`) VALUES
+(2, 'sd 1 surabaya', 'susi', 'Jl. panglima sudirman', '089676556466', 6009.22, 7111.98);
 
 -- --------------------------------------------------------
 
@@ -79,7 +87,9 @@ CREATE TABLE `user` (
 INSERT INTO `user` (`id_user`, `nama`, `foto`, `username`, `password`, `role`) VALUES
 (1, 'qwerty', 'default.jpg', 'qwerty', '$2y$10$HDje7hb7DOoLAozGS767tezlD5vM7VAcEFE7eie7X3q1KaPyYiOWe', 2),
 (2, 'budi', 'pencil-116-156206.png', 'budi', '$2y$10$IIEgNgBPLvvxZ6ER0ZQxQOqTBujUOo/iMz5E.LwhQQ94r6mo/XaoW', 1),
-(3, 'dedy irawan', 'default.jpg', 'dedy', '$2y$10$xtuM1wDxY2.G4ZOpiCF/3uBiu1xj4BGz6Nx3kGDK4cdeIqAsazVRS', 1);
+(3, 'dedy irawan', '17799352_876a694a-a449-44d9-baf4-8fd811563df3_1050_10481.jpg', 'dedy', '$2y$10$2AlEejxa0eJKChWNYTok1OrMDXT5oIHEAbxSGdFTWtQWheMt4RM7.', 1),
+(4, 'mmnmn', '17799352_876a694a-a449-44d9-baf4-8fd811563df3_1050_1048.jpg', 'mnmnmm', '$2y$10$/LU6TZYdsyZR.VFHfqWKKeHZ09J/1j2/ljgcehCB59qWXgdPMKpMa', 1),
+(5, 'irawan', 'gear.png', 'irawan', '$2y$10$SdqCXEtgKXHCu6eWCUN5keY8b6xbvI1TVoFTkgcDxjjVixpG83naC', 1);
 
 --
 -- Indexes for dumped tables
@@ -111,19 +121,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `kriteria`
 --
 ALTER TABLE `kriteria`
-  MODIFY `id_kriteria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_kriteria` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT untuk tabel `sekolah`
 --
 ALTER TABLE `sekolah`
-  MODIFY `id_sekolah` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_sekolah` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `user`
 --
 ALTER TABLE `user`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

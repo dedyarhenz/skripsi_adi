@@ -46,25 +46,42 @@
           <span>Data Kriteria</span></a>
       </li>
 
-      <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+      <li class="nav-item <?= $this->uri->segment(2) == 'bobotsekolah' ? "active" : "" ?>">
+        <a class="nav-link" href="<?= base_url('admin/bobotsekolah') ?>">
           <i class="fas fa-fw fa-chart-area"></i>
           <span>Bobot Sekolah</span></a>
       </li>
 
+      <!-- Divider -->
+      <hr class="sidebar-divider">
+      <!-- Heading -->
+      
+      <div class="sidebar-heading">
+        Akun
+      </div>
+      
       <!-- Nav Item - Charts -->
-      <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+      <li class="nav-item <?= $this->uri->segment(2) == 'profile' ? "active" : "" ?>">
+        <a class="nav-link" href="<?= base_url('admin/profile') ?>">
           <i class="fas fa-fw fa-user"></i>
-          <span>Profile</span></a>
+          <span>Profile Saya</span></a>
+      </li>
+
+      <!-- Nav Item - Charts -->
+      <li class="nav-item <?= $this->uri->segment(3) == 'changepassword' ? "active" : "" ?>">
+        <a class="nav-link" href="<?= base_url('admin/profile/changepassword') ?>">
+          <i class="fas fa-fw fa-cog"></i>
+          <span>Ganti Password</span></a>
       </li>
 
       <!-- Nav Item - Tables -->
       <li class="nav-item">
-        <a class="nav-link" href="<?= base_url('auth/logout') ?>">
+        <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
           <i class="fas fa-sign-out-alt"></i>
           <span>Logout</span></a>
       </li>
+
+      <?php if($this->uri->segment(2) == 'profil') echo "active"; else echo ""; ?>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">

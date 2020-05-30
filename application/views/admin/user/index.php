@@ -37,7 +37,7 @@
 		            <tr>
 		              <td><?php echo $key['nama']; ?></td>
 		              <td><?php echo $key['username']; ?></td>
-		              <td><?php echo ($key['role'] == 1) ? 'Admin' : 'User' ; ?></td>
+		              <td><?php echo ($key['role'] == 1) ? 'Admin' : 'Wali Murid' ; ?></td>
 		              <td><img src="<?php echo base_url('assets/img/profile/'.$key['foto']); ?>" width="50px" ></td>
 		              <td>
 		              	<a class="btn btn-warning btn-sm btn-icon-split" href="<?php echo base_url('admin/user/update/'.$key['id_user']) ?>">

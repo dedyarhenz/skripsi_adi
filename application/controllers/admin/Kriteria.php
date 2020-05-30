@@ -15,7 +15,7 @@ class Kriteria extends CI_Controller {
 
 	public function index()
 	{
-		$data['title'] = 'Kriteria';
+		$data['title'] = 'Admin | Kriteria';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['kriteria_list'] = $this->Kriteria_model->getAllKriteria();
 
@@ -24,7 +24,7 @@ class Kriteria extends CI_Controller {
 
 	public function create()
 	{
-		$data['title'] = 'Kriteria';
+		$data['title'] = 'Admin | Kriteria';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 
 		$this->form_validation->set_rules('kriteria', 'Kriteria', 'trim|required');
@@ -45,7 +45,7 @@ class Kriteria extends CI_Controller {
 
 	public function update($id)
 	{
-		$data['title'] = 'Kriteria';
+		$data['title'] = 'Admin | Kriteria';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['kriteria_data'] = $this->Kriteria_model->getKriteria($id);						
 
