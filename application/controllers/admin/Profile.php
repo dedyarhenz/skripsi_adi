@@ -6,17 +6,19 @@ class Profile extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		if (!$this->session->userdata('username') && $this->session->userdata('role') != 1) {
+		if (!$this->session->userdata('username') && $this->session->userdata('id_role') != 1) {
 			redirect('auth');
 		}
 		$this->load->library('form_validation');
 		$this->load->model('User_model');
+		$this->load->model('Detail_role_model');
 	}
 
 	public function index()
 	{
 		$data['title'] = 'Admin | Profile';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));	
+		$data['detail_role'] = $this->Detail_role_model->getDetailRoleUser($data['user']['id_user']);
 		$this->load->view('admin/profile/index', $data);	
 	}
 

@@ -6,10 +6,12 @@ class User extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		if (!$this->session->userdata('username') && $this->session->userdata('role') != 1) {
+		if (!$this->session->userdata('username') && $this->session->userdata('id_role') != 1) {
 			redirect('auth');
 		}
 		$this->load->model('User_model');
+		$this->load->model('Role_model');
+		$this->load->model('Detail_role_model');
 		$this->load->library('form_validation');
 	}
 
@@ -18,7 +20,6 @@ class User extends CI_Controller {
 		$data['title'] = 'Admin | User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['user_list'] = $this->User_model->getAllUser();
-
 		$this->load->view('admin/user/index', $data);
 	}
 
@@ -26,6 +27,7 @@ class User extends CI_Controller {
 	{
 		$data['title'] = 'Admin | User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
+		$data['role'] = $this->Role_model->getAllRole();
 
 		$this->form_validation->set_rules('nama', 'Nama', 'trim|required');
 		$this->form_validation->set_rules('username', 'Username', 'required|is_unique[user.username]');
@@ -34,7 +36,8 @@ class User extends CI_Controller {
 			'min_length'	=> 'Password min 6 char'
 		]);
 		$this->form_validation->set_rules('password2', 'Password', 'required|trim|matches[password1]');
-		$this->form_validation->set_rules('role', 'Role', 'required|trim');
+		$this->form_validation->set_rules('role[]', 'Role', 'required|trim');
+
 
 		if ($this->form_validation->run() == false) {						
 			$this->load->view('admin/user/add', $data);
@@ -52,7 +55,7 @@ class User extends CI_Controller {
 						'username'		=> $this->input->post('username', true),
 						'password'		=> password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
 						'foto'			=> $this->upload->data('file_name'),
-						'role'			=> $this->input->post('role', true),
+						// 'role'			=> $this->input->post('role', true),
 					];
 				} else {
 					$error = $this->upload->display_errors();
@@ -66,11 +69,20 @@ class User extends CI_Controller {
 					'username'		=> $this->input->post('username', true),
 					'password'		=> password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
 					'foto'			=> 'default.jpg',
-					'role'			=> $this->input->post('role', true),
+					// 'role'			=> $this->input->post('role', true),
 				];
 			}
 			
-			$this->User_model->create($data);
+			$id_user_insert = $this->User_model->create($data);
+			$role = $this->input->post('role', true);
+			foreach ($role as $key) {
+				$data_detail = [
+					'id_user' => $id_user_insert,
+					'id_role' => $key,
+				];
+				$this->Detail_role_model->create($data_detail);
+			}
+
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di Simpan</div>');
 			redirect('admin/user');
 		}
@@ -92,11 +104,13 @@ class User extends CI_Controller {
 	{
 		$data['title'] = 'Admin | User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
-		$data['user_data'] = $this->User_model->getUser($id);						
+		$data['user_data'] = $this->User_model->getUser($id);		
+		$data['role'] = $this->Role_model->getAllRole();
+		$data['detail_role'] = $this->Detail_role_model->getDetailRoleUser($id);		
 
 		$this->form_validation->set_rules('nama', 'Nama', 'trim|required');
 		$this->form_validation->set_rules('username', 'Username', 'required|callback_username_check');
-		$this->form_validation->set_rules('role', 'Role', 'required|trim');
+		$this->form_validation->set_rules('role[]', 'Role', 'required|trim');
 
 		if ($this->form_validation->run() == false) {
 			$this->load->view('admin/user/edit', $data);
@@ -117,7 +131,6 @@ class User extends CI_Controller {
 					$data = [
 						'nama'			=> $this->input->post('nama', true),
 						'username'		=> $this->input->post('username', true),
-						'role'			=> $this->input->post('role', true),
 						'foto'			=> $this->upload->data('file_name'),
 					];
 				} else {
@@ -130,10 +143,21 @@ class User extends CI_Controller {
 				$data = [
 					'nama'			=> $this->input->post('nama', true),
 					'username'		=> $this->input->post('username', true),
-					'role'			=> $this->input->post('role', true),
 				];
 			}
+
 			$this->User_model->update($id, $data);
+
+			$role = $this->input->post('role', true);
+			$this->Detail_role_model->deleteRoleUser($id);
+			foreach ($role as $key) {
+				$data_detail = [
+					'id_user' => $id,
+					'id_role' => $key,
+				];
+				$this->Detail_role_model->create($data_detail);
+			}
+
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di Update</div>');
 			redirect('admin/user');
 		}

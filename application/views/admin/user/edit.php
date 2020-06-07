@@ -31,15 +31,22 @@
 								  	</div>	
 								</div>
 							</div>
-						  <div class="form-group">
-						    <label for="role">Role</label>
-						    <select class="form-control" id="role" name="role">
-						      <option value="">Pilih</option>
-						      <option value="1" <?= $user_data['role'] == 1 ? "selected" : "" ?> >Admin</option>
-						      <option value="2" <?= $user_data['role'] == 2 ? "selected" : "" ?>>Wali Murid</option>
-						    </select>
-						    <?= form_error('role', '<small class="text-danger">', '</small>') ?>
-						  </div>
+						    <div class="form-group">
+							  	<label for="exampleFormControlInput1">Piih Role</label>
+							    <div class="form-check">
+							    	<?php foreach ($role as $key) { ?>
+								      <input class="form-check-input" type="checkbox" id="checkboxrole<?= $key['id_role'] ?>" name="role[]" value="<?= $key['id_role'] ?>"  
+								      <?php echo $detail_role[0]['id_user'] == $user['id_user'] && $key['id_role'] == 1 ? 'disabled ' : ''; ?>
+								      <?php foreach ($detail_role as $key2) {
+								      	echo $key2['id_role'] == $key['id_role'] ? 'checked' : '';
+								      } ?>>
+								      <label class="form-check-label mr-5" for="checkboxrole<?= $key['id_role'] ?>">
+								        <?= $key['role'] ?>
+								      </label>
+								    <?php };?>
+							    </div>
+							    <?= form_error('role[]', '<small class="text-danger">', '</small>') ?>
+							</div>
 					  		<div class="form-group">
 							    <label for="exampleFormControlFile1">Foto</label>
 							    <div class="row">

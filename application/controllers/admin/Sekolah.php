@@ -6,7 +6,7 @@ class Sekolah extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		if (!$this->session->userdata('username') && $this->session->userdata('role') != 1) {
+		if (!$this->session->userdata('username') && $this->session->userdata('id_role') != 1) {
 			redirect('auth');
 		}
 		$this->load->library('form_validation');

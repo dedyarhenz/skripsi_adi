@@ -7,12 +7,12 @@
 <div class="container-fluid">
 	<?= $this->session->flashdata('message'); ?>
 
-  	<!-- table user -->
+  	<!-- table role -->
 	<div class="card shadow mb-4">
 	    <div class="card-header py-3">
     		<div class="d-sm-flex align-items-center justify-content-between">
-    			<h6 class="m-0 font-weight-bold text-primary">Data User</h6>
-				<a class="btn btn-info btn-sm btn-icon-split" href="<?php echo base_url('admin/user/create') ?>">
+    			<h6 class="m-0 font-weight-bold text-primary">Data Role</h6>
+				<a class="btn btn-info btn-sm btn-icon-split" href="<?php echo base_url('admin/role/create') ?>">
               		<span class="icon text-white-50">
                       	<i class="fas fa-plus"></i>
                     </span>
@@ -25,28 +25,22 @@
 	        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 	          <thead>
 	            <tr>
-	              <th>Name</th>
-	              <th>Username</th>
-	              <th>Role</th>
-	              <th>Foto</th>
+	              <th>Nama Role</th>
 	              <th>Action</th>
 	            </tr>
 	          </thead>
 	          <tbody>
-	          	<?php foreach ($user_list as $key) { ?>
+	          	<?php foreach ($role_list as $key) { ?>
 		            <tr>
-		              <td><?php echo $key['nama']; ?></td>
-		              <td><?php echo $key['username']; ?></td>
-		              <td><?php echo $key['rolename']; ?></td>
-		              <td><img src="<?php echo base_url('assets/img/profile/'.$key['foto']); ?>" width="50px" ></td>
+		              <td><?php echo $key['role']; ?></td>
 		              <td>
-		              	<a class="btn btn-warning btn-sm btn-icon-split" href="<?php echo base_url('admin/user/update/'.$key['id_user']) ?>">
+		              	<a class="btn btn-warning btn-sm btn-icon-split" href="<?php echo base_url('admin/role/update/'.$key['id_role']) ?>">
 		              		<span class="icon text-white-50">
 		                      	<i class="fas fa-pencil-alt"></i>
 		                    </span>
 		                    <span class="text">Ubah</span>
 		              	</a>
-		              	<a class="btn btn-danger btn-sm btn-icon-split btn-hapus" href="<?php echo base_url('admin/user/delete/'.$key['id_user']) ?>">
+		              	<a class="btn btn-danger btn-sm btn-icon-split btn-hapus" href="<?php echo base_url('admin/role/delete/'.$key['id_role']) ?>">
 		              		<span class="icon text-white-50">
 		                      	<i class="fas fa-trash"></i>
 		                    </span>

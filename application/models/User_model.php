@@ -10,7 +10,12 @@ class User_model extends CI_Model {
 
 	public function getAllUser()
 	{
-		return $this->db->get('user')->result_array();
+		$this->db->select('user.*, detail_role.*, role.*, GROUP_CONCAT(role.role) as rolename');
+		$this->db->from('user');
+		$this->db->join('detail_role', 'detail_role.id_user = user.id_user');
+		$this->db->join('role', 'role.id_role = detail_role.id_role', 'FIND_IN_SET(role.id_role, user.rolename)');
+		$this->db->group_by('user.id_user');
+		return $this->db->get()->result_array();
 	}
 
 	public function getUser($id)
@@ -21,6 +26,7 @@ class User_model extends CI_Model {
 	public function create($data)
 	{
 		$this->db->insert('user', $data);
+		return $this->db->insert_id();
 	}
 
 	public function update($id, $data)

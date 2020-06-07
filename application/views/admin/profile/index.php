@@ -29,10 +29,22 @@
 							</div>
 							<div class="form-group">
 							    <label for="nama">Role</label>
-							    <input type="text" class="form-control" id="nama" name="nama" value="<?= ($user['role']==1) ? 'Admin' : 'Wali Murid'?>" disabled>
+							    <div class="row">
+								    <?php foreach ($detail_role as $key) { ?>
+								    	<?php if ($key['id_role'] == 1): ?>
+								    		<div class="col-lg-3">
+								    			<h4><span class="badge badge-pill badge-success"><?= $key['role'] ?></span></h4>
+								    		</div>
+								    	<?php endif ?>
+								    	<?php if ($key['id_role'] == 2): ?>
+								    		<div class="col-lg-3">
+								    			<h4><span class="badge badge-pill badge-info"><?= $key['role'] ?></span></h4>
+								    		</div>
+								    	<?php endif ?>
+								    <?php }; ?>
+							    </div>
 							</div>
 							<div class="form-group">
-								<label></label>
 								<a href="<?= base_url('admin/profile/update/'.$user['id_user']) ?>" class="btn btn-primary form-control">Ubah</a>
 							</div>
 			    		</div>

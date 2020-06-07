@@ -42,20 +42,23 @@
 						  	<div class="col-lg-6">
 							  <div class="form-group">
 							    <label for="exampleFormControlInput1">Confirm Password</label>
-							    <input type="text" class="form-control" id="password2" name="password2" placeholder="Ulangi Password">
+							    <input type="password" class="form-control" id="password2" name="password2" placeholder="Ulangi Password">
 							  </div>
 						  	</div>
 						  </div>
 
-							<div class="form-group">
-							    <label for="role">Role</label>
-							    <select class="form-control" id="role" name="role">
-							      <option value="">Pilih</option>
-							      <option value="1" <?= set_value('role') == 1 ? "selected" : "" ?> >Admin</option>
-							      <option value="2" <?= set_value('role') == 2 ? "selected" : "" ?>>Wali Murid</option>
-							    </select>
-							    <?= form_error('role', '<small class="text-danger">', '</small>') ?>
-						  	</div>  		
+  <div class="form-group">
+  	<label for="exampleFormControlInput1">Piih Role</label>
+    <div class="form-check">
+    	<?php foreach ($role as $key) { ?>
+	      <input class="form-check-input" type="checkbox" id="checkboxrole<?= $key['id_role'] ?>" name="role[]" value="<?= $key['id_role'] ?>"  <?= set_checkbox('role[]', $key['id_role']) ?>>
+	      <label class="form-check-label mr-5" for="checkboxrole<?= $key['id_role'] ?>">
+	        <?= $key['role'] ?>
+	      </label>
+	    <?php };?>
+    </div>
+    <?= form_error('role[]', '<small class="text-danger">', '</small>') ?>
+  </div>
 					  		<div class="form-group">
 							    <label for="exampleFormControlFile1">Foto <small class="text-muted">(boleh kosong)</small></label>
 							    <div class="custom-file">

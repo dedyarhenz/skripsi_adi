@@ -7,6 +7,9 @@ class Auth extends CI_Controller {
 	{
 		parent::__construct();
 		$this->load->library('form_validation');
+		$this->load->model('Auth_model');
+		$this->load->model('User_model');
+		$this->load->model('Detail_role_model');
 	}
 
 	public function index()
@@ -21,20 +24,30 @@ class Auth extends CI_Controller {
 			$username = htmlspecialchars($this->input->post('username', true));
 			$password = $this->input->post('password', true);
 
-			$user = $this->db->get_where('user', ['username' => $username])->row_array();
+			// $user = $this->db->get_where('user', ['username' => $username])->row_array();
+			$user = $this->Auth_model->checkLogin($username);
 			if ($user) {
-				if (password_verify($password, $user['password'])) {
-					$data = [
-						'username'	=> $user['username'],
-						'role'		=> $user['role'],
-					];
-					$this->session->set_userdata($data);
-					if ($user['role'] == 1) {
-						redirect('/admin/dashboard');
-					} else {
-						// redirect('user');
-					}
-					
+				if (password_verify($password, $user[0]['password'])) {
+					var_dump($user[0]['id_role']);
+					if (count($user) > 1) {
+						$this->session->set_userdata($data);$data = [
+							'username'	=> $user[0]['username'],
+						];
+						$this->session->set_userdata($data);
+						redirect('pilihrole');
+					}else{
+						$data = [
+							'username'	=> $user[0]['username'],
+							'id_role'	=> $user[0]['id_role'],
+						];
+						$this->session->set_userdata($data);
+						if ($user[0]['id_role'] == 1) {
+							redirect('/admin/dashboard');
+						} else {
+							echo "halaman user";
+							// redirect('user');
+						}
+					}	
 				} else {
 					$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Password salah</div>');	
 					redirect('auth');
@@ -67,10 +80,15 @@ class Auth extends CI_Controller {
 				'username'		=> htmlspecialchars($this->input->post('username', true)),
 				'password'		=> password_hash($this->input->post('password1'), PASSWORD_DEFAULT),
 				'foto'			=> 'default.jpg',
-				'role'			=> 2,
 			];
-			
-			$this->db->insert('user', $data);
+
+			$id_user_insert = $this->User_model->create($data);
+			$role = $this->input->post('role', true);
+			$data_detail = [
+				'id_user' => $id_user_insert,
+				'id_role' => 2,
+			];
+			$this->Detail_role_model->create($data_detail);
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil mendaftar. Silahkan login</div>');
 			redirect('auth');
 		}	
@@ -79,8 +97,7 @@ class Auth extends CI_Controller {
 	public function logout()
 	{
 		$this->session->unset_userdata('username');
-		$this->session->unset_userdata('role');
-		$this->session->unset_userdata('nama');
+		$this->session->unset_userdata('id_role');
 
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil Logout</div>');
 		redirect('auth');

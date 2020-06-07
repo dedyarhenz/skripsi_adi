@@ -1,7 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Kriteria extends CI_Controller {
+class Role extends CI_Controller {
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -10,74 +11,74 @@ class Kriteria extends CI_Controller {
 		}
 		$this->load->library('form_validation');
 		$this->load->model('User_model');
-		$this->load->model('Kriteria_model');
+		$this->load->model('Role_model');
 	}
 
 	public function index()
 	{
-		$data['title'] = 'Admin | Kriteria';
+		$data['title'] = 'Admin | Role';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
-		$data['kriteria_list'] = $this->Kriteria_model->getAllKriteria();
+		$data['role_list'] = $this->Role_model->getAllRole();
 
-		$this->load->view('admin/kriteria/index', $data);		
+		$this->load->view('admin/role/index', $data);		
 	}
 
 	public function create()
 	{
-		$data['title'] = 'Admin | Kriteria';
+		$data['title'] = 'Admin | Role';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 
-		$this->form_validation->set_rules('kriteria', 'Kriteria', 'trim|required');
+		$this->form_validation->set_rules('role', 'Role', 'trim|required');
 
 		if ($this->form_validation->run() == false) {						
-			$this->load->view('admin/kriteria/add', $data);
+			$this->load->view('admin/role/add', $data);
 		} else {
 			$data = [
-				'nama_kriteria'			=> $this->input->post('kriteria', true),
+				'role'			=> $this->input->post('role', true),
 			];
 			
-			$this->Kriteria_model->create($data);
+			$this->Role_model->create($data);
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di Simpan</div>');
-			redirect('admin/kriteria');
+			redirect('admin/role');
 		}
 
 	}
 
 	public function update($id)
 	{
-		$data['title'] = 'Admin | Kriteria';
+		$data['title'] = 'Admin | Role';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
-		$data['kriteria_data'] = $this->Kriteria_model->getKriteria($id);						
+		$data['role_data'] = $this->Role_model->getRole($id);						
 
-		$this->form_validation->set_rules('kriteria', 'Kriteria', 'trim|required');
+		$this->form_validation->set_rules('role', 'Role', 'trim|required');
 
 		if ($this->form_validation->run() == false) {						
-			$this->load->view('admin/kriteria/edit', $data);
+			$this->load->view('admin/role/edit', $data);
 		} else {
 			$data = [
-				'nama_kriteria'			=> $this->input->post('kriteria', true),
+				'role'			=> $this->input->post('role', true),
 			];
-			$this->Kriteria_model->update($id, $data);
+			$this->Role_model->update($id, $data);
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di Update</div>');
-			redirect('admin/kriteria');
+			redirect('admin/role');
 		}
 
 	}
 
 	public function delete($id)
 	{
-		$data = $this->Kriteria_model->getKriteria($id);
+		$data = $this->Role_model->getRole($id);
 		if (empty($data)) {
 			$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Data tidak Ada</div>');
-			redirect('admin/kriteria');
+			redirect('admin/role');
 		}
 
-		$this->Kriteria_model->delete($id);
+		$this->Role_model->delete($id);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di Hapus</div>');
-		redirect('admin/kriteria');
+		redirect('admin/role');
 	}
 
 }
 
-/* End of file Kriteria.php */
-/* Location: ./application/controllers/admin/Kriteria.php */
+/* End of file Role.php */
+/* Location: ./application/controllers/admin/Role.php */

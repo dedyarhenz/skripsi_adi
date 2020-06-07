@@ -34,6 +34,12 @@
           <span>Data User</span></a>
       </li>
 
+      <li class="nav-item <?= $this->uri->segment(2) == 'role' ? "active" : "" ?>">
+        <a class="nav-link" href="<?= base_url('admin/role') ?>">
+          <i class="fas fa-fw fa-user-tag"></i>
+          <span>Data Role</span></a>
+      </li>    
+
       <li class="nav-item <?= $this->uri->segment(2) == 'sekolah' ? "active" : "" ?>">
         <a class="nav-link" href="<?= base_url('admin/sekolah') ?>">
           <i class="fas fa-fw fa-graduation-cap"></i>
@@ -53,6 +59,26 @@
       </li>
 
       <!-- Divider -->
+      <!-- <hr class="sidebar-divider"> -->
+      <!-- Heading -->
+      
+<!--       <div class="sidebar-heading">
+        Setting Menu
+      </div>
+      
+      <li class="nav-item <?= $this->uri->segment(2) == 'role' ? "active" : "" ?>">
+        <a class="nav-link" href="<?= base_url('admin/role') ?>">
+          <i class="fas fa-fw fa-user-tag"></i>
+          <span>Role</span></a>
+      </li>     
+
+      <li class="nav-item <?= $this->uri->segment(2) == 'detailrole' ? "active" : "" ?>">
+        <a class="nav-link" href="<?= base_url('admin/detailrole') ?>">
+          <i class="fas fa-fw fa-users-cog"></i>
+          <span>Detail Role</span></a>
+      </li>     -->  
+
+      <!-- Divider -->
       <hr class="sidebar-divider">
       <!-- Heading -->
       
@@ -70,7 +96,7 @@
       <!-- Nav Item - Charts -->
       <li class="nav-item <?= $this->uri->segment(3) == 'changepassword' ? "active" : "" ?>">
         <a class="nav-link" href="<?= base_url('admin/profile/changepassword') ?>">
-          <i class="fas fa-fw fa-cog"></i>
+          <i class="fas fa-fw fa-key"></i>
           <span>Ganti Password</span></a>
       </li>
 
