@@ -12,94 +12,22 @@
       <!-- Divider -->
       <hr class="sidebar-divider my-0">
 
-      <!-- Nav Item - Dashboard -->
-      <li class="nav-item <?= $this->uri->segment(2) == 'dashboard' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/dashboard') ?>">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
-      </li>
+      <?php 
+        $CI =& get_instance();
+        $CI->load->model('Detail_menu_model');
+        $menu = $CI->Detail_menu_model->getAksesMenu($this->session->userdata('id_role'));
+      ?>
 
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Heading -->
-      <div class="sidebar-heading">
-        Feature
-      </div>
-
-      <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item <?= $this->uri->segment(2) == 'user' ? "active" : "" ?>" >
-        <a class="nav-link" href="<?= base_url('admin/user') ?>">
-          <i class="fas fa-fw fa-users"></i>
-          <span>Data User</span></a>
-      </li>
-
-      <li class="nav-item <?= $this->uri->segment(2) == 'role' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/role') ?>">
-          <i class="fas fa-fw fa-user-tag"></i>
-          <span>Data Role</span></a>
-      </li>    
-
-      <li class="nav-item <?= $this->uri->segment(2) == 'sekolah' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/sekolah') ?>">
-          <i class="fas fa-fw fa-graduation-cap"></i>
-          <span>Data Sekolah</span></a>
-      </li>
-
-      <li class="nav-item <?= $this->uri->segment(2) == 'kriteria' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/kriteria') ?>">
-          <i class="fas fa-fw fa-sitemap"></i>
-          <span>Data Kriteria</span></a>
-      </li>
-
-      <li class="nav-item <?= $this->uri->segment(2) == 'bobotsekolah' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/bobotsekolah') ?>">
-          <i class="fas fa-fw fa-chart-area"></i>
-          <span>Bobot Sekolah</span></a>
-      </li>
-
-      <!-- Divider -->
-      <!-- <hr class="sidebar-divider"> -->
-      <!-- Heading -->
+      <?php foreach ($menu as $key): ?>
+        <?php if ($key['id_parent'] == 0): ?>     
+          <li class="nav-item <?= $title ==  $key['menu'] ? "active" : "" ?>">
+            <a class="nav-link" href="<?= base_url($key['link']) ?>">
+              <i class="<?= $key['icon'] ?>"></i>
+              <span><?= $key['menu'] ?></span></a>
+          </li>
+        <?php  endif;?>
+      <?php endforeach; ?>
       
-<!--       <div class="sidebar-heading">
-        Setting Menu
-      </div>
-      
-      <li class="nav-item <?= $this->uri->segment(2) == 'role' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/role') ?>">
-          <i class="fas fa-fw fa-user-tag"></i>
-          <span>Role</span></a>
-      </li>     
-
-      <li class="nav-item <?= $this->uri->segment(2) == 'detailrole' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/detailrole') ?>">
-          <i class="fas fa-fw fa-users-cog"></i>
-          <span>Detail Role</span></a>
-      </li>     -->  
-
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-      <!-- Heading -->
-      
-      <div class="sidebar-heading">
-        Akun
-      </div>
-      
-      <!-- Nav Item - Charts -->
-      <li class="nav-item <?= $this->uri->segment(2) == 'profile' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/profile') ?>">
-          <i class="fas fa-fw fa-user"></i>
-          <span>Profile Saya</span></a>
-      </li>
-
-      <!-- Nav Item - Charts -->
-      <li class="nav-item <?= $this->uri->segment(3) == 'changepassword' ? "active" : "" ?>">
-        <a class="nav-link" href="<?= base_url('admin/profile/changepassword') ?>">
-          <i class="fas fa-fw fa-key"></i>
-          <span>Ganti Password</span></a>
-      </li>
-
       <!-- Nav Item - Tables -->
       <li class="nav-item">
         <a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">
@@ -107,7 +35,6 @@
           <span>Logout</span></a>
       </li>
 
-      <?php if($this->uri->segment(2) == 'profil') echo "active"; else echo ""; ?>
 
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">

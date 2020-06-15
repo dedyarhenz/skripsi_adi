@@ -15,7 +15,7 @@ class Dashboard extends CI_Controller {
 
 	public function index()
 	{
-		$data['title'] = "Admin | Dashboard";	
+		$data['title'] = "Dashboard";	
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['user_total'] = $this->Dashboard_model->totalUser();
 		$data['kriteria_total'] = $this->Dashboard_model->totalKriteria();

@@ -16,7 +16,7 @@ class Profile extends CI_Controller {
 
 	public function index()
 	{
-		$data['title'] = 'Admin | Profile';
+		$data['title'] = 'Profile Saya';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));	
 		$data['detail_role'] = $this->Detail_role_model->getDetailRoleUser($data['user']['id_user']);
 		$this->load->view('admin/profile/index', $data);	
@@ -35,7 +35,7 @@ class Profile extends CI_Controller {
 
 	public function update($id)
 	{
-		$data['title'] = 'Admin | User';
+		$data['title'] = 'Profile Saya';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));					
 
 		$this->form_validation->set_rules('nama', 'Nama', 'trim|required');
@@ -96,7 +96,7 @@ class Profile extends CI_Controller {
 
 	public function changepassword()
 	{
-		$data['title'] = 'Admin | Ganti Password';
+		$data['title'] = 'Ganti Password';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$id_user = $data['user']['id_user'];	
 

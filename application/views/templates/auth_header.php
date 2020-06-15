@@ -18,6 +18,14 @@
   <!-- Custom styles for this template-->
   <link href="<?= base_url('assets/'); ?>css/sb-admin-2.min.css" rel="stylesheet">
 
+  <style>
+    body.myimage {
+      background-image: url(<?= base_url('assets/') ?>img/background/one-piece.jpg);
+      /*background-repeat: repeat;*/
+      /*background-size: 500px 500px;*/
+    }
+  </style>
+
 </head>
 
-<body class="bg-gradient-primary">
+<body class="bg-gradient-primary myimage">

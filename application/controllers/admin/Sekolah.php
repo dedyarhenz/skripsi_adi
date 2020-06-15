@@ -16,7 +16,7 @@ class Sekolah extends CI_Controller {
 
 	public function index()
 	{
-		$data['title'] = 'Admin | Sekolah';
+		$data['title'] = 'Data Sekolah';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['sekolah_list'] = $this->Sekolah_model->getAllSekolah();
 
@@ -25,7 +25,7 @@ class Sekolah extends CI_Controller {
 
 	public function create()
 	{
-		$data['title'] = 'Admin | Sekolah';
+		$data['title'] = 'Data Sekolah';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 
 		$this->form_validation->set_rules('nama_sekolah', 'Nama Sekolah', 'trim|required');
@@ -56,7 +56,7 @@ class Sekolah extends CI_Controller {
 
 	public function update($id)
 	{
-		$data['title'] = 'Sekolah';
+		$data['title'] = 'Data Sekolah';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['sekolah_data'] = $this->Sekolah_model->getSekolah($id);						
 

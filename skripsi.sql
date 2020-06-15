@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 07 Jun 2020 pada 11.16
+-- Waktu pembuatan: 15 Jun 2020 pada 16.07
 -- Versi server: 10.1.38-MariaDB
 -- Versi PHP: 5.6.40
 
@@ -34,6 +34,26 @@ CREATE TABLE `detail_menu` (
   `id_menu` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data untuk tabel `detail_menu`
+--
+
+INSERT INTO `detail_menu` (`id_detail_menu`, `id_role`, `id_menu`) VALUES
+(133, 2, 1),
+(134, 2, 14),
+(135, 2, 15),
+(136, 2, 16),
+(190, 1, 1),
+(191, 1, 2),
+(192, 1, 3),
+(193, 1, 4),
+(194, 1, 5),
+(195, 1, 6),
+(196, 1, 7),
+(197, 1, 8),
+(198, 1, 14),
+(199, 1, 15);
+
 -- --------------------------------------------------------
 
 --
@@ -54,12 +74,12 @@ INSERT INTO `detail_role` (`id_detail_role`, `id_user`, `id_role`) VALUES
 (1, 2, 1),
 (2, 3, 1),
 (5, 4, 2),
-(6, 5, 1),
 (20, 9, 1),
 (21, 9, 2),
 (26, 7, 1),
 (27, 7, 2),
-(28, 10, 2);
+(28, 10, 2),
+(29, 5, 2);
 
 -- --------------------------------------------------------
 
@@ -92,8 +112,26 @@ CREATE TABLE `menu` (
   `menu` varchar(50) NOT NULL,
   `icon` varchar(100) DEFAULT NULL,
   `link` varchar(100) NOT NULL,
-  `id_parent` int(11) DEFAULT NULL
+  `id_parent` int(11) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data untuk tabel `menu`
+--
+
+INSERT INTO `menu` (`id_menu`, `menu`, `icon`, `link`, `id_parent`) VALUES
+(1, 'Dashboard', 'fas fa-fw fa-tachometer-alt', 'admin/dashboard', 0),
+(2, 'Data User', 'fas fa-fw fa-users', 'admin/user', 0),
+(3, 'Data Role', 'fas fa-fw fa-user-tag', 'admin/role', 0),
+(4, 'Data Sekolah', 'fas fa-fw fa-graduation-cap', 'admin/sekolah', 0),
+(5, 'Data Kriteria', 'fas fa-fw fa-sitemap', 'admin/kriteria', 0),
+(6, 'Bobot Sekolah', 'fas fa-fw fa-chart-area', 'admin/bobotsekolah', 0),
+(7, 'Menu', 'fa fa-align-justify', 'admin/menu', 0),
+(8, 'Akses Menu', 'fa fa-tasks', 'admin/detail_menu', 0),
+(14, 'Profile Saya', 'fas fa-fw fa-user', 'admin/profile', 0),
+(15, 'Ganti Password', 'fas fa-fw fa-key', 'admin/profile/changepassword', 0),
+(16, 'Rekomendasi Sekolah', 'fa fa-university', 'admin/rekomendasi', 0),
+(18, 'tes', 'tes', 'tes', 0);
 
 -- --------------------------------------------------------
 
@@ -223,13 +261,13 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `detail_menu`
 --
 ALTER TABLE `detail_menu`
-  MODIFY `id_detail_menu` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_detail_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200;
 
 --
 -- AUTO_INCREMENT untuk tabel `detail_role`
 --
 ALTER TABLE `detail_role`
-  MODIFY `id_detail_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id_detail_role` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT untuk tabel `kriteria`
@@ -241,7 +279,7 @@ ALTER TABLE `kriteria`
 -- AUTO_INCREMENT untuk tabel `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT untuk tabel `role`

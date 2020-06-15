@@ -17,7 +17,7 @@ class User extends CI_Controller {
 
 	public function index()
 	{
-		$data['title'] = 'Admin | User';
+		$data['title'] = 'Data User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['user_list'] = $this->User_model->getAllUser();
 		$this->load->view('admin/user/index', $data);
@@ -25,7 +25,7 @@ class User extends CI_Controller {
 
 	public function create()
 	{
-		$data['title'] = 'Admin | User';
+		$data['title'] = 'Data User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['role'] = $this->Role_model->getAllRole();
 
@@ -102,7 +102,7 @@ class User extends CI_Controller {
 
 	public function update($id)
 	{
-		$data['title'] = 'Admin | User';
+		$data['title'] = 'Data User';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['user_data'] = $this->User_model->getUser($id);		
 		$data['role'] = $this->Role_model->getAllRole();

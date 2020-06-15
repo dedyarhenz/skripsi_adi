@@ -28,7 +28,6 @@ class Auth extends CI_Controller {
 			$user = $this->Auth_model->checkLogin($username);
 			if ($user) {
 				if (password_verify($password, $user[0]['password'])) {
-					var_dump($user[0]['id_role']);
 					if (count($user) > 1) {
 						$this->session->set_userdata($data);$data = [
 							'username'	=> $user[0]['username'],
@@ -41,12 +40,12 @@ class Auth extends CI_Controller {
 							'id_role'	=> $user[0]['id_role'],
 						];
 						$this->session->set_userdata($data);
-						if ($user[0]['id_role'] == 1) {
+						// if ($user[0]['id_role'] == 1) {
 							redirect('/admin/dashboard');
-						} else {
-							echo "halaman user";
-							// redirect('user');
-						}
+						// } else {
+						// 	echo "halaman user";
+						// 	// redirect('user');
+						// }
 					}	
 				} else {
 					$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Password salah</div>');	

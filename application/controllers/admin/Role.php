@@ -16,7 +16,7 @@ class Role extends CI_Controller {
 
 	public function index()
 	{
-		$data['title'] = 'Admin | Role';
+		$data['title'] = 'Data Role';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['role_list'] = $this->Role_model->getAllRole();
 
@@ -25,7 +25,7 @@ class Role extends CI_Controller {
 
 	public function create()
 	{
-		$data['title'] = 'Admin | Role';
+		$data['title'] = 'Data Role';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 
 		$this->form_validation->set_rules('role', 'Role', 'trim|required');
@@ -46,7 +46,7 @@ class Role extends CI_Controller {
 
 	public function update($id)
 	{
-		$data['title'] = 'Admin | Role';
+		$data['title'] = 'Data Role';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['role_data'] = $this->Role_model->getRole($id);						
 
