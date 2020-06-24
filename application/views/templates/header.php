@@ -21,6 +21,9 @@
   <!-- Custom styles for this page -->
   <link href="<?= base_url('assets/'); ?>vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
+  <link rel="stylesheet" href="<?= base_url('assets/') ?>leaflet/leaflet.css" />
+  <script src="<?= base_url('assets/') ?>leaflet/leaflet.js"></script>
+
 </head>
 
 <body id="page-top">

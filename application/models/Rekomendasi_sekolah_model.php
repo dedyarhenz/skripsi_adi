@@ -1,0 +1,41 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Rekomendasi_sekolah_model extends CI_Model {
+
+	public function getClusterUser($idUser)
+	{
+		return $this->db->get_where('cluster', ['id_user' => $idUser])->result_array();
+	}
+
+	public function getDetailClusterUser($idUser)
+	{
+		$this->db->select('*');
+		$this->db->from('cluster');
+		$this->db->join('detail_cluster', 'detail_cluster.id_cluster = cluster.id_cluster');
+		$this->db->join('sekolah', 'sekolah.id_sekolah = detail_cluster.id_sekolah');
+		$this->db->where('cluster.id_user', $idUser);
+		return $this->db->get()->result_array();
+	}
+
+	public function createCluster($data)
+	{
+		$this->db->insert('cluster', $data);
+		return $this->db->insert_id();
+	}	
+
+	public function createDetailCluster($data)
+	{
+		$this->db->insert('detail_cluster', $data);
+	}
+
+	public function deleteClusterUser($idUser)
+	{
+		$this->db->where('id_user', $idUser);
+		$this->db->delete('cluster');
+	}
+
+}
+
+/* End of file Rekomendasi_sekolah_model.php */
+/* Location: ./application/models/Rekomendasi_sekolah_model.php */
