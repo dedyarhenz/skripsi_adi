@@ -18,6 +18,17 @@ class Rekomendasi_sekolah_model extends CI_Model {
 		return $this->db->get()->result_array();
 	}
 
+	public function getPerDetailClusterUser($idUser, $id_cluster)
+	{
+		$this->db->select('*');
+		$this->db->from('cluster');
+		$this->db->join('detail_cluster', 'detail_cluster.id_cluster = cluster.id_cluster');
+		$this->db->join('sekolah', 'sekolah.id_sekolah = detail_cluster.id_sekolah');
+		$this->db->where('cluster.id_user', $idUser);
+		$this->db->where('cluster.id_cluster', $id_cluster);
+		return $this->db->get()->result_array();
+	}
+
 	public function createCluster($data)
 	{
 		$this->db->insert('cluster', $data);

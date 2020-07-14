@@ -13,6 +13,8 @@ class Rekomendasi_sekolah extends CI_Controller {
 		$this->load->model('Sekolah_model');
 		$this->load->model('Kriteria_model');
 		$this->load->model('Rekomendasi_sekolah_model');
+		$this->load->model('Nilai_model');
+		$this->load->model('Hasil_ahp_model');
 	}
 
 	public function index()
@@ -61,6 +63,16 @@ class Rekomendasi_sekolah extends CI_Controller {
 		echo json_encode(["message" => "Data Berhasil di simpan"]);
 	}
 
+	public function cluster_hasil_ahp()
+	{
+		$data['title'] = 'Rekomendasi Sekolah';
+		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
+		$data['hasil_ahp'] = $this->Hasil_ahp_model->getHasilAhpUser($data['user']['id_user']);
+		$data['cluster'] = $this->Rekomendasi_sekolah_model->getClusterUser($data['user']['id_user']);
+
+		$this->load->view('admin/rekomendasi_sekolah/hasil_ahp', $data);
+	}
+
 	public function createBobotKriteria()
 	{
 		$data['title'] = 'Rekomendasi Sekolah';
@@ -69,8 +81,325 @@ class Rekomendasi_sekolah extends CI_Controller {
 		$data['cluster'] = $this->Rekomendasi_sekolah_model->getClusterUser($data['user']['id_user']);
 		$data['cluster_detail'] = $this->Rekomendasi_sekolah_model->getDetailClusterUser($data['user']['id_user']);
 
-		$this->load->view('admin/rekomendasi_sekolah/bobot_kriteria', $data);
+		foreach ($data['kriteria'] as $keyRow) {
+			foreach ($data['kriteria'] as $keyCol) {
+				$this->form_validation->set_rules($keyRow['id_kriteria'] . '_' . $keyCol['id_kriteria'], $keyRow['id_kriteria'] . '_' . $keyCol['id_kriteria'], 'trim|required');
+			}
+		}
+
+		if ($this->form_validation->run() == false) {
+			$this->load->view('admin/rekomendasi_sekolah/bobot_kriteria', $data);
+		} else {
+			foreach ($data['cluster'] as $key_cluster => $value_cluster) {
+				$data_cluster = $this->Rekomendasi_sekolah_model->getPerDetailClusterUser($data['user']['id_user'], $value_cluster['id_cluster']);
+				// $data_cluster = $this->Sekolah_model->getAllSekolah();
+				$hasil = $this->_hitungAhp($data_cluster);
+				foreach ($hasil as $key => $value) {
+					$data_map = [
+						"id_cluster"	=> $value['id_cluster'],
+						"id_sekolah"	=> $value['id_sekolah'],
+						"nilai_hasil"	=> $value['hasil'],
+					];
+					$this->Hasil_ahp_model->create($data_map);
+				}
+			}
+
+		}
+
 	}
+
+	private function _hitungAhp($data_cluster){
+		// hitung data kriteria
+		$data_bobot_kriteria = $this->_bobot();
+		$jumlah_bobot_kriteria = $this->_jumlahBobot($data_bobot_kriteria);
+
+		$data_normalisasi_kriteria = $this->_normalisasi($data_bobot_kriteria, $jumlah_bobot_kriteria);
+		$jumlah_normalisasi_kriteria = $this->_jumlahNormalisasi($data_normalisasi_kriteria);
+
+		$data_rata_eigen = $this->_rataEigen($data_normalisasi_kriteria);
+		// end hitung data kriteria
+
+		// hitung data alternatif
+		$data_bobot_alternatif = $this->_bobotAlternatif($data_cluster);
+		$jumlah_bobot_alternatif = $this->_jumlahBobotAlternatif($data_bobot_alternatif);
+
+		$data_normalisasi_alternatif = $this->_normalisasiAlternatif($data_bobot_alternatif, $jumlah_bobot_alternatif);
+		$jumlah_normalisasi_alternatif = $this->_jumlahNormalisasiAlternatif($data_normalisasi_alternatif);
+
+		$data_eigen_alternatif_kriteria = $this->_eigenAlternatifKriteria($data_normalisasi_alternatif, $data_rata_eigen);
+		$data_hasil = $this->_hasilAkhir($data_eigen_alternatif_kriteria);
+
+		return $data_hasil;
+
+		// echo '<pre>';
+		// var_dump($data_hasil);
+		// echo '</pre>';
+		// end hitung data alternatif
+	}
+
+	private function _bobot()
+	{
+		// map bobot input to array
+		$data['kriteria'] = $this->Kriteria_model->getAllKriteria();
+		$data_input = $this->input->post(NULL, TRUE);
+		$data_bobot = [];
+		foreach ($data['kriteria'] as $key => $value) {
+			$data_bobot[$key] = [
+				"id_kriteria" 	=> $value['id_kriteria'],
+				"perbandingan"	=> [],
+			];
+
+			foreach ($data_input as $key_input => $value_input) {
+				$kriteria_id = explode("_", $key_input);
+				if ($value['id_kriteria'] == $kriteria_id[0]) {
+					array_push($data_bobot[$key]["perbandingan"], [
+						"id_kriteria" 	=> $kriteria_id[1],
+						"nilai"			=> $value_input,
+					]);
+				}
+			}
+		}
+
+		return $data_bobot;
+	}
+
+	private function _jumlahBobot($data_bobot)
+	{
+		$jumlah_bobot = [];
+		foreach ($data_bobot as $key1 => $value1) {
+			$hasil = 0;
+			foreach ($data_bobot as $key2 => $value2) {	
+				$hasil += (double)$value2['perbandingan'][$key1]['nilai']; 
+			}
+			array_push($jumlah_bobot, [
+				"id_kriteria" 	=> $value1['id_kriteria'],
+				"jumlah_bobot"	=> $hasil,
+			]);
+		}
+		return $jumlah_bobot;
+	}
+
+	private function _normalisasi($data_bobot, $jumlah_bobot)
+	{
+		$data_normalisasi = [];
+		foreach ($data_bobot as $key => $value) {
+			$data_normalisasi[$key] = [
+				"id_kriteria" 	=> $value['id_kriteria'],
+				"perbandingan"	=> [],
+			];
+			foreach ($value['perbandingan'] as $key2 => $perbandingan) {
+				foreach ($jumlah_bobot as $key3 => $jml_bobot) {
+					if ($jml_bobot['id_kriteria'] == $perbandingan['id_kriteria']) {
+						array_push($data_normalisasi[$key]["perbandingan"], [
+							"id_kriteria" 		=> $perbandingan['id_kriteria'],
+							"nilai_normalisasi"	=> (double)$perbandingan['nilai']/(double)$jml_bobot['jumlah_bobot'],
+						]);
+					}
+				}
+			}
+		}
+		// echo '<pre>';
+		// var_dump($data_normalisasi);
+		// echo '</pre>';
+		return $data_normalisasi;
+	}
+
+	private function _jumlahNormalisasi($data_normalisasi)
+	{
+		$jumlah_normalisasi = [];
+		foreach ($data_normalisasi as $key1 => $value1) {
+			$hasil = 0;
+			foreach ($data_normalisasi as $key2 => $value2) {	
+				$hasil += (double)$value2['perbandingan'][$key1]['nilai_normalisasi']; 
+			}
+			array_push($jumlah_normalisasi, [
+				"id_kriteria" 			=> $value1['id_kriteria'],
+				"jumlah_normalisasi"	=> $hasil,
+			]);
+		}
+		// echo '<pre>';
+		// var_dump($jumlah_normalisasi);
+		// echo '</pre>';
+		return $jumlah_normalisasi;
+	}
+
+	private function _rataEigen($data_eigen)
+	{
+		$rata_eigen = [];
+		foreach ($data_eigen as $key1 => $value1) {
+			$hasil = 0;
+			foreach ($value1['perbandingan'] as $key2 => $value2) {	
+				$hasil += (double)$value2['nilai_normalisasi']; 
+				
+			}
+			array_push($rata_eigen, [
+				"id_kriteria" 	=> $value1['id_kriteria'],
+				"rata_eigen"	=> (double)$hasil/(double)count($data_eigen),
+			]);
+		}
+		// echo '<pre>';
+		// var_dump($rata_eigen);
+		// echo '</pre>';
+		return $rata_eigen;
+	}
+
+	private function _bobotAlternatif($data_cluster)
+	{
+		// map bobot database to array
+		$data['sekolah'] = $data_cluster;
+		$data['kriteria'] = $this->Kriteria_model->getAllKriteria();
+		$data['nilai'] = $this->Nilai_model->getAllNilai();
+		$data_bobot = [];
+		foreach ($data['sekolah'] as $key => $value) {
+			$data_bobot[$key] = [
+				"id_sekolah" 	=> $value['id_sekolah'],
+				"id_cluster"	=> $value['id_cluster'],
+				"nilai_sekolah"	=> [],
+			];
+
+			foreach ($data['kriteria'] as $key_kriteria => $value_kriteria) {
+				// set default nilai
+				array_push($data_bobot[$key]["nilai_sekolah"], [
+					"id_kriteria" 	=> $value_kriteria['id_kriteria'],
+					"nilai"			=> 0,
+				]);
+				foreach ($data['nilai'] as $key_nilai => $value_nilai) {
+					// set nilai jika tersedia dari table nilai
+					if ($value['id_sekolah'] == $value_nilai['id_sekolah'] && $value_nilai['id_kriteria'] == $value_kriteria['id_kriteria']) {
+						$data_bobot[$key]['nilai_sekolah'][$key_kriteria]['nilai'] = $value_nilai['nilai'];
+					}
+				}
+			}
+		}
+		// echo '<pre>';
+		// var_dump($data_bobot);
+		// echo '</pre>';
+
+		return $data_bobot;
+	}
+
+	private function _jumlahBobotAlternatif($data_bobot)
+	{
+		$data['kriteria'] = $this->Kriteria_model->getAllKriteria();
+		$jumlah_bobot = [];
+		foreach ($data['kriteria'] as $key_kriteria => $value_kriteria) {
+			$hasil = 0;
+			foreach ($data_bobot as $key_bobot => $value_bobot) {	
+				$hasil += (double)$value_bobot['nilai_sekolah'][$key_kriteria]['nilai']; 
+			}
+			array_push($jumlah_bobot, [
+				"id_kriteria" 	=> $value_kriteria['id_kriteria'],
+				"jumlah_bobot"	=> $hasil,
+			]);
+		}
+		// echo '<pre>';
+		// var_dump($jumlah_bobot);
+		// echo '</pre>';
+		return $jumlah_bobot;
+	}
+
+	private function _normalisasiAlternatif($data_bobot, $jumlah_bobot)
+	{
+		$data_normalisasi = [];
+		foreach ($data_bobot as $key_bobot => $value_bobot) {
+			$data_normalisasi[$key_bobot] = [
+				"id_sekolah" 	=> $value_bobot['id_sekolah'],
+				"id_cluster"	=> $value_bobot['id_cluster'],
+				"nilai_sekolah"	=> [],
+			];
+			foreach ($value_bobot['nilai_sekolah'] as $key_nilai_sekolah => $value_nilai_sekolah) {
+				foreach ($jumlah_bobot as $key_jml_bobot => $value_jml_bobot) {
+
+					if ($value_jml_bobot['id_kriteria'] == $value_nilai_sekolah['id_kriteria']) {
+						array_push($data_normalisasi[$key_bobot]["nilai_sekolah"], [
+							"id_kriteria" 		=> $value_nilai_sekolah['id_kriteria'],
+							"nilai_normalisasi"	=> (double)$value_jml_bobot['jumlah_bobot'] != 0 ? (double)$value_nilai_sekolah['nilai']/(double)$value_jml_bobot['jumlah_bobot'] : 0,
+						]);
+					}
+				}
+			}
+		}
+		// echo '<pre>';
+		// var_dump($data_normalisasi);
+		// echo '</pre>';
+		return $data_normalisasi;
+	}
+
+	private function _jumlahNormalisasiAlternatif($data_normalisasi)
+	{
+		$data['kriteria'] = $this->Kriteria_model->getAllKriteria();
+		$jumlah_normalisasi = [];
+		foreach ($data['kriteria'] as $key_kriteria => $value_kriteria) {
+			$hasil = 0;
+			foreach ($data_normalisasi as $key_normalisasi => $value_normalisasi) {	
+				$hasil += (double)$value_normalisasi['nilai_sekolah'][$key_kriteria]['nilai_normalisasi']; 
+			}
+			array_push($jumlah_normalisasi, [
+				"id_kriteria" 			=> $value_kriteria['id_kriteria'],
+				"jumlah_normalisasi"	=> $hasil,
+			]);
+		}
+		// echo '<pre>';
+		// var_dump($jumlah_normalisasi);
+		// echo '</pre>';
+		return $jumlah_normalisasi;
+	}
+
+	private function _eigenAlternatifKriteria($normalisasi_alternatif, $data_rata_eigen)
+	{
+		$data_alternatif_kriteria = [];
+		foreach ($normalisasi_alternatif as $key_normalisasi_alternatif => $value_normalisasi_alternatif) {
+			$data_alternatif_kriteria[$key_normalisasi_alternatif] = [
+				"id_sekolah" 	=> $value_normalisasi_alternatif['id_sekolah'],
+				"id_cluster"	=> $value_normalisasi_alternatif['id_cluster'],
+				"nilai_sekolah"	=> [],
+			];
+			foreach ($value_normalisasi_alternatif['nilai_sekolah'] as $key_nilai_sekolah => $value_nilai_sekolah) {
+				foreach ($data_rata_eigen as $key_rata_eigen => $value_rata_eigen) {
+
+					if ($value_rata_eigen['id_kriteria'] == $value_nilai_sekolah['id_kriteria']) {
+						array_push($data_alternatif_kriteria[$key_normalisasi_alternatif]["nilai_sekolah"], [
+							"id_kriteria" 		=> $value_nilai_sekolah['id_kriteria'],
+							"nilai_eigen"		=> (double)$value_nilai_sekolah['nilai_normalisasi']*(double)$value_rata_eigen['rata_eigen'],
+						]);
+					}
+				}
+			}
+		}
+		// echo '<pre>';
+		// var_dump($data_alternatif_kriteria);
+		// echo '</pre>';
+		return $data_alternatif_kriteria;
+	}
+
+	private function _hasilAkhir($alternatif_kriteria)
+	{
+		$hasil_akhir = [];
+		foreach ($alternatif_kriteria as $key1 => $value1) {
+			$hasil = 0;
+			foreach ($value1['nilai_sekolah'] as $key2 => $value2) {	
+				$hasil += (double)$value2['nilai_eigen']; 
+				
+			}
+			array_push($hasil_akhir, [
+				"id_sekolah" 	=> $value1['id_sekolah'],
+				"id_cluster"	=> $value1['id_cluster'],
+				"hasil"			=> $hasil,
+			]);
+		}
+
+		usort($hasil_akhir, function($a, $b){
+			return $b['hasil'] <=> $a['hasil'];
+		});
+		// echo '<pre>';
+		// var_dump($alternatif_kriteria);
+		// echo '</pre>';
+		return $hasil_akhir;
+	}
+
+
+
+
 
 // 	public function coretan()
 // 	{

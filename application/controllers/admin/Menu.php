@@ -56,7 +56,7 @@ class Menu extends CI_Controller {
 		$data['title'] = 'Menu';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['menu_data'] = $this->Menu_model->getMenu($id);	
-		$data['menu_parent'] = $this->Menu_model->getMenuParent();					
+		$data['menu_parent'] = $this->Menu_model->getMenuParent($data['menu_data']['id_menu']);					
 
 		$this->form_validation->set_rules('menu', 'Menu', 'trim|required');
 

@@ -13,6 +13,13 @@ class Kriteria_model extends CI_Model {
 		return $this->db->get_where('kriteria', ['id_kriteria' => $id])->row_array();
 	}
 
+	public function getKriteriaDoesntHave($id_sekolah)
+	{
+		$query = "SELECT * FROM kriteria k WHERE NOT EXISTS (SELECT * FROM nilai n WHERE n.id_kriteria = k.id_kriteria AND n.id_sekolah = ".$this->db->escape($id_sekolah).")";
+
+		return $this->db->query($query)->result_array();		
+	}
+
 	public function create($data)
 	{
 		$this->db->insert('kriteria', $data);

@@ -30,9 +30,14 @@ class Menu_model extends CI_Model {
 		$this->db->delete('menu');
 	}
 
-	public function getMenuParent()
+	public function getMenuParent($idMenu=null)
 	{
-		return $this->db->get_where('menu', ['id_parent' => null])->result_array();
+		$this->db->select('*');
+		$this->db->from('menu');
+		if ($idMenu != null) {
+			$this->db->where('id_menu !=', $idMenu);
+		}
+		return $this->db->get()->result_array();
 	}
 
 }

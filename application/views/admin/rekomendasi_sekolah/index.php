@@ -38,7 +38,7 @@
 
 <script type="text/javascript">
 	
-	var map = L.map('map').setView([-7.25, 112.73], 13);
+	var map = L.map('map').setView([-7.25656, 112.73166], 13);
 	var base_url = window.location.origin + '/' + window.location.pathname.split ('/') [1] + '/';
 	var datasekolah = <?php echo json_encode($sekolah) ?>;
 	var data_jarak = [];

@@ -5,6 +5,24 @@
  ?>
 <!-- Begin Page Content -->
 <div class="container-fluid">
+	<?php
+		if (validation_errors()) {
+			echo '<div class="alert alert-danger" role="alert">Gagal simpan, Lengkapi Form Sekolah</div>';
+		} 	 
+	?>
+	<div class="row">
+		<div class="col-lg">
+			<div class="card shadow mb-4">
+			    <div class="card-header py-3">
+			      <h6 class="m-0 font-weight-bold text-primary">Pilih Lokasi Sekolah</h6>
+			    </div>
+			    <div class="card-body">
+			    	<div id="map" style="height: 350px;">
+			    	</div>
+			    </div>
+			</div>
+		</div>
+	</div>
 	<div class="row">
 		<div class="col-lg">
 			<div class="card shadow mb-4">
@@ -50,14 +68,14 @@
 								<div class="col">
 									<div class="form-group">
 									    <label for="latitude">Latitude</label>
-									    <input type="text" class="form-control" id="latitude" name="latitude" placeholder="Masukkan Latitude" value="<?= set_value('latitude') ?>">
+									    <input readonly type="text" class="form-control" id="latitude" name="latitude" placeholder="Masukkan Latitude" value="<?= set_value('latitude') ?>">
 									    <?= form_error('latitude', '<small class="text-danger">', '</small>') ?>
 								  	</div>		
 								</div>
 								<div class="col">
 									<div class="form-group">
 									    <label for="longtitude">Longtitude</label>
-									    <input type="text" class="form-control" id="longtitude" name="longtitude" placeholder="Masukkan Longtitude" value="<?= set_value('longtitude') ?>">
+									    <input readonly type="text" class="form-control" id="longtitude" name="longtitude" placeholder="Masukkan Longtitude" value="<?= set_value('longtitude') ?>">
 									    <?= form_error('longtitude', '<small class="text-danger">', '</small>') ?>
 								  	</div>		
 								</div>
@@ -80,3 +98,28 @@
 <?php 
 	$this->load->view('templates/footer');
  ?>
+
+<script type="text/javascript">
+	
+	var map = L.map('map').setView([-7.25656, 112.73166], 13);
+	var base_url = window.location.origin + '/' + window.location.pathname.split ('/') [1] + '/';
+
+	// add map
+	L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}).addTo(map);
+
+	// add marker
+	var sekolah = L.marker([-7.25656, 112.73166], {draggable: 'true', autoPan: 'true'}).addTo(map);
+	sekolah.bindPopup('Drag ke lokasi sekolah <br>'+ sekolah.getLatLng()).openPopup();
+	
+	// set drag marker
+	sekolah.on("drag", function(e) {
+		console.log(sekolah.getLatLng());
+		$('#latitude').val(sekolah.getLatLng().lat.toFixed(5));
+		$('#longtitude').val(sekolah.getLatLng().lng.toFixed(5));
+		sekolah.bindPopup('Drag ke lokasi anda <br>'+ sekolah.getLatLng()).openPopup();
+	});
+
+	
+</script>

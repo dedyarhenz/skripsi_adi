@@ -7,6 +7,7 @@
 
 
 <div class="container-fluid">
+	<!-- table cluster -->
 	<div class="row">
 		<?php foreach ($cluster as $key1):?>
 			<div class="col-md-6">
@@ -45,6 +46,16 @@
 			</div>
 		<?php endforeach ?>
 	</div>
+	<!-- end table cluster -->
+	
+	<?php
+		if (validation_errors()) {
+			echo validation_errors();
+			echo '<div class="alert alert-danger" role="alert">Gagal simpan, Cek form bobot kriteria</div>';
+		} 	 
+	?>
+
+	<!-- bobot kriteria -->
 	<div class="row">
 		<div class="col-lg-12">
               <!-- Basic Card Example -->
@@ -53,7 +64,7 @@
                   <h6 class="m-0 font-weight-bold text-primary">Masukkan Bobot Kriteria</h6>
                 </div>
                 <div class="card-body">
-					<form>
+					<form action="<?= base_url('admin/rekomendasi_sekolah/createBobotKriteria') ?>" method="post">
 						<div class="table-responsive">
 					        <table class="table table-bordered" width="100%" cellspacing="0">
 					          <thead>
@@ -72,12 +83,19 @@
 					          			<?php foreach ($kriteria as $index => $value): ?>
 					          				<td>
 					          					<?php if ($index + 1 <= $dis): ?>
-					          						<select class="form-control" disabled="disabled">
-						          						<option>1</option>
-						          					</select>
+					          						<input type="text" class="form-control" id="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" name="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" value="" >
 					          					<?php else: ?>					          					
-						          					<select class="form-control">
-						          						<option><?= $index ?></option>
+						          					<input class="form-control" id="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" name="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" >
+						          						<!-- <option value="">pilih nilai perbandingan</option>
+						          						<option value="1">1</option>
+						          						<option value="2">2</option>
+						          						<option value="3">3</option>
+						          						<option value="4">4</option>
+						          						<option value="5">5</option>
+						          						<option value="6">6</option>
+						          						<option value="7">7</option>
+						          						<option value="8">8</option>
+						          						<option value="9">9</option> -->
 						          					</select>
 					          					<?php endif ?>
 					          				</td>
@@ -98,6 +116,7 @@
 
         </div>
 	</div>
+	<!-- end bobot kriteria -->
 </div>
 
 
@@ -110,4 +129,26 @@
  	$(document).ready(function() {
  		$('table.display').DataTable();
 	} );
+
+	let kriteria = <?php echo json_encode($kriteria) ?>;
+
+
+	for (itemRow of kriteria){
+		for (itemCol of kriteria){
+			let idSelect = '#' + itemRow.id_kriteria + '_' + itemCol.id_kriteria;
+			let data = '#' + itemCol.id_kriteria + '_' + itemRow.id_kriteria;
+			
+			$(idSelect).change(function() {
+				if ($(this).val() == '') {
+					$(data).val('');
+				}else{
+					$(data).val(1/$(this).val());	
+				}
+			})
+
+			if (itemRow.id_kriteria == itemCol.id_kriteria) {
+				$(idSelect).val(1);
+			}
+		}	
+	}
  </script>
