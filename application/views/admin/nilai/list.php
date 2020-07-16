@@ -52,7 +52,7 @@
 		                    </span>
 		                    <span class="text">Ubah</span>
 		              	</a>
-		              	<a class="btn btn-danger btn-sm btn-icon-split btn-hapus" href="<?php echo base_url('admin/nilai/delete/'.$key['id_nilai']) ?>">
+		              	<a class="btn btn-danger btn-sm btn-icon-split btn-hapus" href="<?php echo base_url('admin/nilai/delete/'.$key['id_nilai'].'/'.$sekolah_data['id_sekolah']) ?>">
 		              		<span class="icon text-white-50">
 		                      	<i class="fas fa-trash"></i>
 		                    </span>

@@ -20,7 +20,8 @@ class Nilai extends CI_Controller {
 	{
 		$data['title'] = 'Data Nilai';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
-		$data['sekolah_list'] = $this->Sekolah_model->getAllSekolah();
+		$data['kriteria_total'] = $this->Kriteria_model->totalKriteria();
+		$data['sekolah_list'] = $this->Sekolah_model->getAllSekolahCountNilai();
 
 		$this->load->view('admin/nilai/index', $data);		
 	}
@@ -84,7 +85,7 @@ class Nilai extends CI_Controller {
 
 	}
 
-	public function delete($id)
+	public function delete($id, $id_sekolah)
 	{
 		$data = $this->Nilai_model->getNilai($id);
 		if (empty($data)) {
@@ -94,7 +95,7 @@ class Nilai extends CI_Controller {
 
 		$this->Nilai_model->delete($id);
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di Hapus</div>');
-		redirect('admin/nilai/list');
+		redirect('admin/nilai/list/'.$id_sekolah);
 	}
 
 }

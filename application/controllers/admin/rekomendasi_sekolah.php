@@ -90,19 +90,32 @@ class Rekomendasi_sekolah extends CI_Controller {
 		if ($this->form_validation->run() == false) {
 			$this->load->view('admin/rekomendasi_sekolah/bobot_kriteria', $data);
 		} else {
+			
+			// hitung ranking ahp setiap cluster
 			foreach ($data['cluster'] as $key_cluster => $value_cluster) {
+				// hapus hasil_ahp lama 
+				$this->Hasil_ahp_model->deleteHasilAhpCluster($value_cluster['id_cluster']);
+
+				// hitung ahp dan simpan
 				$data_cluster = $this->Rekomendasi_sekolah_model->getPerDetailClusterUser($data['user']['id_user'], $value_cluster['id_cluster']);
-				// $data_cluster = $this->Sekolah_model->getAllSekolah();
 				$hasil = $this->_hitungAhp($data_cluster);
 				foreach ($hasil as $key => $value) {
-					$data_map = [
-						"id_cluster"	=> $value['id_cluster'],
-						"id_sekolah"	=> $value['id_sekolah'],
-						"nilai_hasil"	=> $value['hasil'],
-					];
-					$this->Hasil_ahp_model->create($data_map);
+
+					/* gunakan ini jika format column di database beda*/
+					// $data_map = [
+					// 	"id_cluster"	=> $value['id_cluster'],
+					// 	"id_sekolah"	=> $value['id_sekolah'],
+					// 	"nilai_hasil"	=> $value['hasil'],
+					// 	"ranking"		=> $value['ranking'],
+					// ];
+					// $this->Hasil_ahp_model->create($data_map);
+
+
+					$this->Hasil_ahp_model->create($value);
 				}
 			}
+
+			redirect('admin/Rekomendasi_sekolah/cluster_hasil_ahp');
 
 		}
 
@@ -128,13 +141,13 @@ class Rekomendasi_sekolah extends CI_Controller {
 
 		$data_eigen_alternatif_kriteria = $this->_eigenAlternatifKriteria($data_normalisasi_alternatif, $data_rata_eigen);
 		$data_hasil = $this->_hasilAkhir($data_eigen_alternatif_kriteria);
+		// end hitung data alternatif
 
-		return $data_hasil;
 
 		// echo '<pre>';
 		// var_dump($data_hasil);
 		// echo '</pre>';
-		// end hitung data alternatif
+		return $data_hasil;
 	}
 
 	private function _bobot()
@@ -381,18 +394,32 @@ class Rekomendasi_sekolah extends CI_Controller {
 				$hasil += (double)$value2['nilai_eigen']; 
 				
 			}
-			array_push($hasil_akhir, [
-				"id_sekolah" 	=> $value1['id_sekolah'],
-				"id_cluster"	=> $value1['id_cluster'],
-				"hasil"			=> $hasil,
-			]);
+
+			// cek jika sama sekali belum isi nilai tidak disimpan sebaliknya jika nilai full atau sebagian maka simpan
+			if ($hasil != 0) {
+				array_push($hasil_akhir, [
+					"id_sekolah" 	=> $value1['id_sekolah'],
+					"id_cluster"	=> $value1['id_cluster'],
+					"nilai_hasil"	=> $hasil,
+					"ranking"		=> 0,
+				]);
+			}
 		}
 
+		// sorting nilai kecil ke besar
 		usort($hasil_akhir, function($a, $b){
-			return $b['hasil'] <=> $a['hasil'];
+			return $b['nilai_hasil'] <=> $a['nilai_hasil'];
 		});
+
+		// ranking sekolah
+		$rank = 1;
+		foreach ($hasil_akhir as $key => $value) {
+			if ($value['nilai_hasil'] != 0) {
+				$hasil_akhir[$key]['ranking'] = $rank++;
+			}
+		}
 		// echo '<pre>';
-		// var_dump($alternatif_kriteria);
+		// var_dump($hasil_akhir);
 		// echo '</pre>';
 		return $hasil_akhir;
 	}

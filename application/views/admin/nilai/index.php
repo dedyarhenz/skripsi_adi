@@ -20,6 +20,7 @@
 	            <tr>
 	              <th>Sekolah</th>
 	              <th>Alamat</th>
+	              <th>Nilai terisi</th>
 	              <th>Action</th>
 	            </tr>
 	          </thead>
@@ -28,6 +29,21 @@
 		            <tr>
 		              <td><?php echo $key['nama_sekolah']; ?></td>
 		              <td><?php echo $key['alamat_sekolah']; ?></td>
+		              <td>
+		              	<?php if ($key['nilai_terisi'] == $kriteria_total): ?>
+			              	<div class="badge badge-pill badge-success">
+							  Lengkap <span class="badge badge-light"><?= $key['nilai_terisi'] ?> </span>
+							</div>
+		              	<?php elseif($key['nilai_terisi'] == 0): ?>
+		              		<div class="badge badge-pill badge-danger">
+							  Kosong <span class="badge badge-light"><?= $key['nilai_terisi'] ?> </span>
+							</div>
+						<?php else: ?>
+							<div class="badge badge-pill badge-warning">
+							  Kurang <span class="badge badge-light"><?= $key['nilai_terisi'] ?> </span>
+							</div>
+		              	<?php endif ?>
+		              </td>
 		              <td>
 		              	<a class="btn btn-info btn-sm btn-icon-split" href="<?php echo base_url('admin/nilai/list/'.$key['id_sekolah']) ?>">
 		              		<span class="icon text-white-50">

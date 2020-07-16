@@ -37,6 +37,11 @@ class Kriteria_model extends CI_Model {
 		$this->db->delete('kriteria');
 	}
 
+	public function totalKriteria()
+	{
+		return $this->db->count_all('kriteria'); 
+	}
+
 }
 
 /* End of file Kriteria_model.php */

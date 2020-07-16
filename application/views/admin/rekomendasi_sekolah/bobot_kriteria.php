@@ -50,7 +50,6 @@
 	
 	<?php
 		if (validation_errors()) {
-			echo validation_errors();
 			echo '<div class="alert alert-danger" role="alert">Gagal simpan, Cek form bobot kriteria</div>';
 		} 	 
 	?>

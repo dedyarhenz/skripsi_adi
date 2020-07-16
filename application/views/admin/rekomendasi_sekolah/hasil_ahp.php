@@ -24,6 +24,7 @@
 					            	<th>Id Sekolah</th>
 						            <th>Nama Sekolah</th>
 						            <th>Hasil AHP</th>
+						            <th>Ranking</th>
 					            </tr>
 					          </thead>
 					          <tbody>
@@ -33,6 +34,7 @@
 					          				<td><?= $key2['id_sekolah'] ?></td>
 						          			<td><?= $key2['nama_sekolah'] ?></td>
 						          			<td><?= $key2['nilai_hasil'] ?></td>
+						          			<td><?= $key2['ranking'] ?></td>
 					          			</tr>
 					          		<?php endif ?>
 					          	<?php endforeach ?>

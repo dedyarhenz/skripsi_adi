@@ -19,6 +19,12 @@ class Hasil_ahp_model extends CI_Model {
 		return $this->db->get()->result_array();
 	}
 
+	public function deleteHasilAhpCluster($id_cluster)
+	{
+		$this->db->where('id_cluster', $id_cluster);
+		$this->db->delete('hasil_ahp');
+	}
+
 }
 
 /* End of file Hasil_ahp.php */
