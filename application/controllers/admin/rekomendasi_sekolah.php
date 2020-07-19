@@ -8,6 +8,7 @@ class Rekomendasi_sekolah extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		is_logged_in();
 		$this->load->library('form_validation');
 		$this->load->model('User_model');
 		$this->load->model('Sekolah_model');
@@ -69,6 +70,7 @@ class Rekomendasi_sekolah extends CI_Controller {
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data['hasil_ahp'] = $this->Hasil_ahp_model->getHasilAhpUser($data['user']['id_user']);
 		$data['cluster'] = $this->Rekomendasi_sekolah_model->getClusterUser($data['user']['id_user']);
+		$data['cluster_detail'] = $this->Rekomendasi_sekolah_model->getDetailClusterUser($data['user']['id_user']);
 
 		$this->load->view('admin/rekomendasi_sekolah/hasil_ahp', $data);
 	}
@@ -81,6 +83,7 @@ class Rekomendasi_sekolah extends CI_Controller {
 		$data['cluster'] = $this->Rekomendasi_sekolah_model->getClusterUser($data['user']['id_user']);
 		$data['cluster_detail'] = $this->Rekomendasi_sekolah_model->getDetailClusterUser($data['user']['id_user']);
 
+
 		foreach ($data['kriteria'] as $keyRow) {
 			foreach ($data['kriteria'] as $keyCol) {
 				$this->form_validation->set_rules($keyRow['id_kriteria'] . '_' . $keyCol['id_kriteria'], $keyRow['id_kriteria'] . '_' . $keyCol['id_kriteria'], 'trim|required');
@@ -90,7 +93,6 @@ class Rekomendasi_sekolah extends CI_Controller {
 		if ($this->form_validation->run() == false) {
 			$this->load->view('admin/rekomendasi_sekolah/bobot_kriteria', $data);
 		} else {
-			
 			// hitung ranking ahp setiap cluster
 			foreach ($data['cluster'] as $key_cluster => $value_cluster) {
 				// hapus hasil_ahp lama 
@@ -287,6 +289,7 @@ class Rekomendasi_sekolah extends CI_Controller {
 		// echo '<pre>';
 		// var_dump($data_bobot);
 		// echo '</pre>';
+		// die();
 
 		return $data_bobot;
 	}

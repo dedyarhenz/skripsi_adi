@@ -18,6 +18,13 @@ class Dashboard_model extends CI_Model {
 		return $this->db->count_all('sekolah'); 
 	}
 
+	public function totalNilaiTerisi()
+	{	
+		$query = "SELECT COUNT(sekolah.id_sekolah) as terisi_lengkap FROM sekolah JOIN nilai ON sekolah.id_sekolah = nilai.id_sekolah GROUP BY sekolah.id_sekolah HAVING COUNT(nilai.id_nilai) = (SELECT COUNT(id_kriteria) FROM kriteria)";
+
+		return $this->db->query($query)->row_array();
+	}
+
 }
 
 /* End of file Dashboard_model.php */

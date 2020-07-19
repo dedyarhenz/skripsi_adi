@@ -6,9 +6,7 @@ class Dashboard extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		if (!$this->session->userdata('username') && $this->session->userdata('id_role') != 1) {
-			redirect('auth');
-		}
+		is_logged_in();
 		$this->load->model('User_model');
 		$this->load->model('Dashboard_model');
 	}
@@ -20,6 +18,7 @@ class Dashboard extends CI_Controller {
 		$data['user_total'] = $this->Dashboard_model->totalUser();
 		$data['kriteria_total'] = $this->Dashboard_model->totalKriteria();
 		$data['sekolah_total'] = $this->Dashboard_model->totalSekolah();
+		$data['nilai_terisi'] = $this->Dashboard_model->totalNilaiTerisi()['terisi_lengkap']/$data['sekolah_total']*100;
 
 		$this->load->view('admin/dashboard/index', $data);	
 	}

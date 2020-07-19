@@ -7,46 +7,6 @@
 
 
 <div class="container-fluid">
-	<!-- table cluster -->
-	<div class="row">
-		<?php foreach ($cluster as $key1):?>
-			<div class="col-md-6">
-				<div class="card shadow mb-4">
-
-					<a href="#collapseCardExample<?= $key1['id_cluster'] ?>" class="d-block card-header py-3 card-cluster collapsed" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="collapseCardExample">
-	                	<h6 class="m-0 font-weight-bold text-primary"><?= ucfirst($key1['nama_cluster']) ?></h6>
-	                </a>
-	                <div class="collapse hide" id="collapseCardExample<?= $key1['id_cluster'] ?>">
-					    <div class="card-body">
-					      <div class="table-responsive">
-					        <table class="table table-bordered display" width="100%" cellspacing="0">
-					          <thead>
-					            <tr>
-					            	<th>Id Sekolah</th>
-						            <th>Nama Sekolah</th>
-						            <th>Jarak Km</th>
-					            </tr>
-					          </thead>
-					          <tbody>
-					          	<?php foreach ($cluster_detail as $key2): ?>
-					          		<?php if ($key1['id_cluster'] == $key2['id_cluster']): ?>
-					          			<tr>
-					          				<td><?= $key2['id_sekolah'] ?></td>
-						          			<td><?= $key2['nama_sekolah'] ?></td>
-						          			<td><?= $key2['jarak_sekolah'] ?></td>
-					          			</tr>
-					          		<?php endif ?>
-					          	<?php endforeach ?>
-					          </tbody>
-					        </table>
-					      </div>
-					    </div>
-					</div>
-				</div>
-			</div>
-		<?php endforeach ?>
-	</div>
-	<!-- end table cluster -->
 	
 	<?php
 		if (validation_errors()) {
@@ -82,19 +42,28 @@
 					          			<?php foreach ($kriteria as $index => $value): ?>
 					          				<td>
 					          					<?php if ($index + 1 <= $dis): ?>
-					          						<input type="text" class="form-control" id="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" name="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" value="" >
+					          						<input type="text" class="form-control" id="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" name="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" value="" readonly>
 					          					<?php else: ?>					          					
-						          					<input class="form-control" id="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" name="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" >
-						          						<!-- <option value="">pilih nilai perbandingan</option>
-						          						<option value="1">1</option>
-						          						<option value="2">2</option>
-						          						<option value="3">3</option>
-						          						<option value="4">4</option>
-						          						<option value="5">5</option>
-						          						<option value="6">6</option>
-						          						<option value="7">7</option>
-						          						<option value="8">8</option>
-						          						<option value="9">9</option> -->
+						          					<select class="form-control" id="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" name="<?= $key['id_kriteria'] . '_' . $value['id_kriteria']?>" >
+						          						<option value="">pilih nilai perbandingan</option>
+						          						<option value="1">1-Kedua elemen sama penting</option>
+						          						<option value="2">2-Nilai antara 1 dan 3 yang berdekatan</option>
+						          						<option value="3">3-Elemen yang satu sedikit lebih penting dari elemen lainnya</option>
+						          						<option value="4">4-Nilai antara 3 dan 5 yang berdekatan</option>
+						          						<option value="5">5-Elemen yang satu lebih penting dari elemen lainnya</option>
+						          						<option value="6">6-Nilai antara 5 dan 7 yang berdekatan</option>
+						          						<option value="7">7-Elemen yang satu sangat penting dari elemen lainnya</option>
+						          						<option value="8">8-Nilai antara 7 dan 9 yang berdekatan</option>
+						          						<option value="9">9-Elemen yang satu mutlak sangat penting dari elemen lainnya</option>
+
+						          						<option value="0.5" class="kebalikan">1/2-Nilai antara 1 dan 3 yang berdekatan</option>
+						          						<option value="0.33" class="kebalikan">1/3-Elemen yang satu sedikit lebih penting dari elemen lainnya</option>
+						          						<option value="0.25" class="kebalikan">1/4-Nilai antara 3 dan 5 yang berdekatan</option>
+						          						<option value="0.2" class="kebalikan">1/5-Elemen yang satu lebih penting dari elemen lainnya</option>
+						          						<option value="0.167" class="kebalikan">1/6-Nilai antara 5 dan 7 yang berdekatan</option>
+						          						<option value="0.142857‬" class="kebalikan">1/7-Elemen yang satu sangat penting dari elemen lainnya</option>
+						          						<option value="0.125" class="kebalikan">1/8-Nilai antara 7 dan 9 yang berdekatan</option>
+						          						<option value="0.11" class="kebalikan">1/9-Elemen yang satu mutlak sangat penting dari elemen lainnya</option>
 						          					</select>
 					          					<?php endif ?>
 					          				</td>
@@ -141,7 +110,8 @@
 				if ($(this).val() == '') {
 					$(data).val('');
 				}else{
-					$(data).val(1/$(this).val());	
+					let hasil = 1/parseFloat($(this).val());
+					$(data).val(hasil);	
 				}
 			})
 

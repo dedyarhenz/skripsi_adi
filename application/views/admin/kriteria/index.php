@@ -6,7 +6,7 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
 	<?= $this->session->flashdata('message'); ?>
-
+	
   	<!-- table kriteria -->
 	<div class="card shadow mb-4">
 	    <div class="card-header py-3">

@@ -31,6 +31,7 @@
 		    	<hr>
 			 	<div class="form-group">
 			 		<label></label>
+					<a href="<?= base_url('admin/detail_menu') ?>" class="btn btn-secondary">Batal</a>
 					<button type="submit" class="btn btn-success">Simpan</button>
 				</div>
 	    	</form>

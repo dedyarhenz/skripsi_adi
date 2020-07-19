@@ -40,12 +40,11 @@ class Auth extends CI_Controller {
 							'id_role'	=> $user[0]['id_role'],
 						];
 						$this->session->set_userdata($data);
-						// if ($user[0]['id_role'] == 1) {
+						if ($user[0]['id_role'] == 1) {
 							redirect('/admin/dashboard');
-						// } else {
-						// 	echo "halaman user";
-						// 	// redirect('user');
-						// }
+						} else {
+							redirect('/admin/rekomendasi_sekolah');
+						}
 					}	
 				} else {
 					$this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Password salah</div>');	
@@ -100,6 +99,14 @@ class Auth extends CI_Controller {
 
 		$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Berhasil Logout</div>');
 		redirect('auth');
+	}
+
+	public function blocked()
+	{
+		$data['title'] = "Blocked";	
+		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
+
+		$this->load->view('auth/blocked', $data);
 	}
 
 }

@@ -10,7 +10,7 @@ class Sekolah_model extends CI_Model {
 
 	public function getAllSekolahCountNilai()
 	{	
-		$this->db->select('*, COUNT(nilai.id_sekolah) as nilai_terisi');
+		$this->db->select('*, sekolah.id_sekolah as id_sekolah, COUNT(nilai.id_sekolah) as nilai_terisi');
 		$this->db->from('sekolah');
 		$this->db->join('nilai', 'nilai.id_sekolah = sekolah.id_sekolah', 'left');
 		$this->db->group_by('sekolah.id_sekolah');
