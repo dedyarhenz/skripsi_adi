@@ -17,6 +17,15 @@ class Sekolah_model extends CI_Model {
 		return $this->db->get()->result_array();
 	}
 
+	public function getAllSekolahBiaya()
+	{	
+		$query = "SELECT * FROM sekolah s
+				JOIN nilai n ON s.id_sekolah = n.id_sekolah 
+				WHERE n.id_kriteria = 3";
+
+		return $this->db->query($query)->result_array();
+	}
+
 	public function getSekolah($id)
 	{
 		return $this->db->get_where('sekolah', ['id_sekolah' => $id])->row_array();

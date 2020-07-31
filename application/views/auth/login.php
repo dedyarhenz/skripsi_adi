@@ -33,9 +33,9 @@
                   </button>
                 </form>
                 <hr>
-                <div class="text-center">
+<!--                 <div class="text-center">
                   <a class="small" href="<?= base_url(''); ?>">Lupa Password?</a>
-                </div>
+                </div> -->
                 <div class="text-center">
                   <a class="small" href="<?= base_url('auth/register'); ?>">Buat Akun</a>
                 </div>

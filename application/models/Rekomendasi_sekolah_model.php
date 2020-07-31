@@ -14,6 +14,8 @@ class Rekomendasi_sekolah_model extends CI_Model {
 		$this->db->from('cluster');
 		$this->db->join('detail_cluster', 'detail_cluster.id_cluster = cluster.id_cluster');
 		$this->db->join('sekolah', 'sekolah.id_sekolah = detail_cluster.id_sekolah');
+		$this->db->join('nilai', 'sekolah.id_sekolah = nilai.id_sekolah');
+		$this->db->where('nilai.id_kriteria', 3);
 		$this->db->where('cluster.id_user', $idUser);
 		return $this->db->get()->result_array();
 	}

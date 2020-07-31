@@ -38,9 +38,9 @@ class Menu extends CI_Controller {
 				'link'			=> $this->input->post('link', true),
 			];
 
-			if ($this->input->post('parent_menu', true)) {
-				$data['id_parent'] = $this->input->post('parent_menu', true);
-			}
+			// if ($this->input->post('parent_menu', true)) {
+			// 	$data['id_parent'] = $this->input->post('parent_menu', true);
+			// }
 			
 			$this->Menu_model->create($data);
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di Simpan</div>');
@@ -67,9 +67,9 @@ class Menu extends CI_Controller {
 				'link'			=> $this->input->post('link', true),
 			];
 
-			if ($this->input->post('parent_menu', true)) {
-				$data['id_parent'] = $this->input->post('parent_menu', true);
-			}
+			// if ($this->input->post('parent_menu', true)) {
+			// 	$data['id_parent'] = $this->input->post('parent_menu', true);
+			// }
 
 			$this->Menu_model->update($id, $data);
 			$this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Data Berhasil di Update</div>');

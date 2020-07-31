@@ -40,7 +40,7 @@
 									</div>
 								</div>
 
-								<div class="col-lg-6">
+								<!-- <div class="col-lg-6">
 									<div class="form-group">
 									    <label for="parent_menu">Parent Menu</label>
 									    <select class="form-control" id="parent_menu" name="parent_menu">
@@ -50,7 +50,7 @@
 									      <?php endforeach; ?>
 									    </select>
 									  </div>
-								</div>
+								</div> -->
 							</div>
 
 						 	<hr>

@@ -46,6 +46,7 @@
 							            <tr>
 							            	<th>Id Sekolah</th>
 								            <th>Nama Sekolah</th>
+								            <th>Biaya</th>
 								            <th>Jarak Km</th>
 								            <th>Action</th>
 							            </tr>
@@ -56,6 +57,7 @@
 							          			<tr>
 							          				<td><?= $key2['id_sekolah'] ?></td>
 								          			<td><?= $key2['nama_sekolah'] ?></td>
+								          			<td><?= $key2['nilai'] ?></td>
 								          			<td><?= $key2['jarak_sekolah'] ?></td>
 								          			<td>
 								          				<button class="btn btn-info btn-sm btn-icon-split" onclick="findLokasiSekolah(<?= $key2['id_sekolah'];?>)">

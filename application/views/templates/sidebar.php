@@ -19,13 +19,11 @@
       ?>
 
       <?php foreach ($menu as $key): ?>
-        <?php if ($key['id_parent'] == 0): ?>     
-          <li class="nav-item <?= $title ==  $key['menu'] ? "active" : "" ?>">
-            <a class="nav-link" href="<?= base_url($key['link']) ?>">
-              <i class="<?= $key['icon'] ?>"></i>
-              <span><?= $key['menu'] ?></span></a>
-          </li>
-        <?php  endif;?>
+        <li class="nav-item <?= $title ==  $key['menu'] ? "active" : "" ?>">
+          <a class="nav-link" href="<?= base_url($key['link']) ?>">
+            <i class="<?= $key['icon'] ?>"></i>
+            <span><?= $key['menu'] ?></span></a>
+        </li>
       <?php endforeach; ?>
       
       <!-- Nav Item - Tables -->

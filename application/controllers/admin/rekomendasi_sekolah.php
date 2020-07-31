@@ -22,7 +22,8 @@ class Rekomendasi_sekolah extends CI_Controller {
 	{
 		$data['title'] = 'Rekomendasi Sekolah';
 		$data['user'] = $this->User_model->getUserWithUsername($this->session->userdata('username'));
-		$data['sekolah'] = $this->Sekolah_model->getAllSekolah();
+		// $data['sekolah'] = $this->Sekolah_model->getAllSekolah();
+		$data['sekolah'] = $this->Sekolah_model->getAllSekolahBiaya();
 
 		$this->load->view('admin/rekomendasi_sekolah/index', $data);		
 	}
@@ -32,12 +33,15 @@ class Rekomendasi_sekolah extends CI_Controller {
 	{
 		$user = $this->User_model->getUserWithUsername($this->session->userdata('username'));
 		$data_jarak = $this->input->post('data_jarak', true);
+		
 		$data_samples = array();
 		foreach ($data_jarak as $key) {
 			$jarakToKm = round($key['jarak'] / 1000, 2);
-			$data_samples[$key['id_sekolah']] = [$jarakToKm];
+			$biaya = intval($key['biaya']);
+			$data_samples[$key['id_sekolah']] = [$jarakToKm, $biaya];
 		}
 
+		// $kmeans = new KMeans(3);
 		$kmeans = new KMeans(3);
 		// delete cluster lama
 		$this->Rekomendasi_sekolah_model->deleteClusterUser($user['id_user']);
@@ -61,7 +65,7 @@ class Rekomendasi_sekolah extends CI_Controller {
 				$this->Rekomendasi_sekolah_model->createDetailCluster($data);
 			}
 		}
-		echo json_encode(["message" => "Data Berhasil di simpan"]);
+		echo json_encode(["message" => "Data Berhasil di simpan", "data" => $result_cluster]);
 	}
 
 	public function cluster_hasil_ahp()
@@ -83,7 +87,6 @@ class Rekomendasi_sekolah extends CI_Controller {
 		$data['cluster'] = $this->Rekomendasi_sekolah_model->getClusterUser($data['user']['id_user']);
 		$data['cluster_detail'] = $this->Rekomendasi_sekolah_model->getDetailClusterUser($data['user']['id_user']);
 
-
 		foreach ($data['kriteria'] as $keyRow) {
 			foreach ($data['kriteria'] as $keyCol) {
 				$this->form_validation->set_rules($keyRow['id_kriteria'] . '_' . $keyCol['id_kriteria'], $keyRow['id_kriteria'] . '_' . $keyCol['id_kriteria'], 'trim|required');
@@ -93,6 +96,8 @@ class Rekomendasi_sekolah extends CI_Controller {
 		if ($this->form_validation->run() == false) {
 			$this->load->view('admin/rekomendasi_sekolah/bobot_kriteria', $data);
 		} else {
+
+
 			// hitung ranking ahp setiap cluster
 			foreach ($data['cluster'] as $key_cluster => $value_cluster) {
 				// hapus hasil_ahp lama 
@@ -264,6 +269,26 @@ class Rekomendasi_sekolah extends CI_Controller {
 		$data['sekolah'] = $data_cluster;
 		$data['kriteria'] = $this->Kriteria_model->getAllKriteria();
 		$data['nilai'] = $this->Nilai_model->getAllNilai();
+		$total_biaya = $this->Nilai_model->getTotalBiaya();
+		$nilai_proses = array();
+
+		// // ubah biaya ke persentase (biaya nilai kecil memeiliki bobottinggi)
+		// foreach ($data['nilai'] as $key => $value) {
+		// 	if ($value['id_kriteria'] == 3) {
+				
+		// 		$biaya_ganti = $value;
+		// 		$persen = ($total_biaya['nilai']-$value['nilai'])/$total_biaya['nilai']*100;
+		// 		$biaya_ganti['nilai'] = $value['nilai']*-1;
+
+		// 		array_push($nilai_proses, $biaya_ganti);	
+		// 	}else{
+		// 		array_push($nilai_proses, $value);	
+		// 	}
+		// }
+		// $data['nilai'] = $nilai_proses;
+		// // end
+
+
 		$data_bobot = [];
 		foreach ($data['sekolah'] as $key => $value) {
 			$data_bobot[$key] = [
@@ -287,7 +312,7 @@ class Rekomendasi_sekolah extends CI_Controller {
 			}
 		}
 		// echo '<pre>';
-		// var_dump($data_bobot);
+		// var_dump($nilai_proses);
 		// echo '</pre>';
 		// die();
 

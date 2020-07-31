@@ -29,7 +29,6 @@
 	              <th>Nama Menu</th>
 	              <th>Icon</th>
 	              <th>Link</th>
-	              <th>Id Parent</th>
 	              <th>Action</th>
 	            </tr>
 	          </thead>
@@ -40,7 +39,6 @@
 		              <td><?php echo $key['menu']; ?></td>
 		              <td><?php echo $key['icon']; ?></td>
 		              <td><?php echo $key['link']; ?></td>
-		              <td><?php echo $key['id_parent']; ?></td>
 		              <td>
 		              	<a class="btn btn-warning btn-sm btn-icon-split" href="<?php echo base_url('admin/menu/update/'.$key['id_menu']) ?>">
 		              		<span class="icon text-white-50">

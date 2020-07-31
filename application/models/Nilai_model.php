@@ -25,6 +25,13 @@ class Nilai_model extends CI_Model {
 		return $this->db->get()->result_array();
 	}
 
+	public function getTotalBiaya($value='')
+	{
+		$this->db->select_sum('nilai');
+		$this->db->where('id_kriteria', 3);
+		return $this->db->get('nilai')->row_array();
+	}
+
 	public function create($data)
 	{
 		$this->db->insert('nilai', $data);

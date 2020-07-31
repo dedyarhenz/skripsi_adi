@@ -41,6 +41,7 @@
 	var map = L.map('map').setView([-7.25656, 112.73166], 13);
 	var base_url = window.location.origin + '/' + window.location.pathname.split ('/') [1] + '/';
 	var datasekolah = <?php echo json_encode($sekolah) ?>;
+	console.log(datasekolah);
 	var data_jarak = [];
 
 	// add map
@@ -63,8 +64,10 @@
 	// connver lokasi ke jarak
 	for (sekolah of datasekolah){
 		let jarak = map.distance([sekolah.latitude, sekolah.longtitude], user.getLatLng());
-		data_jarak.push({id_sekolah: sekolah.id_sekolah, nama_sekolah: sekolah.nama_sekolah, jarak: jarak});
+		data_jarak.push({id_sekolah: sekolah.id_sekolah, nama_sekolah: sekolah.nama_sekolah, jarak: jarak, biaya: sekolah.nilai});
 	}
+
+	console.log(data_jarak);
 
 
 	$("#btncluster").click(function(){
