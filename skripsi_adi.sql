@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 30 Jan 2021 pada 09.44
+-- Waktu pembuatan: 30 Jan 2021 pada 10.07
 -- Versi server: 10.4.8-MariaDB
 -- Versi PHP: 7.2.24
 
@@ -128,6 +128,21 @@ INSERT INTO `menu` (`id_menu`, `menu`, `icon`, `link`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Struktur dari tabel `pasien`
+--
+
+CREATE TABLE `pasien` (
+  `id_pasien` varchar(11) NOT NULL,
+  `tahun` int(11) NOT NULL,
+  `bulan` varchar(50) NOT NULL,
+  `minggu` int(11) NOT NULL,
+  `sembuh` int(11) NOT NULL,
+  `meninggal` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Struktur dari tabel `role`
 --
 
@@ -204,6 +219,12 @@ ALTER TABLE `kriteria`
 --
 ALTER TABLE `menu`
   ADD PRIMARY KEY (`id_menu`);
+
+--
+-- Indeks untuk tabel `pasien`
+--
+ALTER TABLE `pasien`
+  ADD PRIMARY KEY (`id_pasien`);
 
 --
 -- Indeks untuk tabel `role`
